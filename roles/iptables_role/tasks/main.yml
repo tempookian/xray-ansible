@@ -1,0 +1,15 @@
+---
+# tasks file for iptables_role
+- name: Install iptables
+  apt:
+    name: iptables
+    state: latest
+- name: iptables-restore
+  shell: iptables-restore < /etc/iptables/rules.v4
+- name: Copy iptables config file
+  template:
+    src: iptables.v4.j2
+    dest: /etc/iptables/rules.v4
+  notify:
+    - Restart iptables
+    - Restart fail2ban

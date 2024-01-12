@@ -1,0 +1,8 @@
+---
+# tasks file for utils_role
+- name: Install utils
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop: "{{ list_of_packages }}"

@@ -1,0 +1,23 @@
+---
+# tasks file for ./roles/cert_role
+
+# vars = domains
+# Domain -> Certificate -> CERTIFICATE, KEY -> Copy to /etc/nginx/certs
+
+- name: Copy certificates
+  copy:
+    src: ../{{ item.certificate.path }}
+    dest: "/etc/ssl/certs/{{ item.domain }}.pem"
+    mode: 0644
+    owner: root
+    group: root
+  loop: "{{ domains }}"
+
+- name: Copy keys
+  copy:
+    src: ../{{ item.certificate.key }}
+    dest: "/etc/ssl/private/{{ item.domain }}.key"
+    mode: 0400
+    owner: root
+    group: root
+  loop: "{{ domains }}"

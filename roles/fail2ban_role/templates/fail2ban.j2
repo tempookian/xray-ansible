@@ -1,0 +1,8 @@
+[sshd]
+enabled = {{ fail2ban_jail_sshd.enabled }}
+port = {{ fail2ban_jail_sshd.port }}
+filter = {{ fail2ban_jail_sshd.filter }}
+logpath = {{ fail2ban_jail_sshd.logpath }}
+maxretry = {{ fail2ban_jail_sshd.maxretry }}
+bantime = {{ fail2ban_jail_sshd.bantime }}
+findtime = {{ fail2ban_jail_sshd.findtime }}

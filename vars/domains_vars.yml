@@ -1,0 +1,21 @@
+# Make sure to set the DNS record to proxied for all subdomains
+# Make sure to set CloudFlare SSL/TLS encryption mode to Full (strict)
+# Make sure to get origin certificate from CloudFlare and specify the path to the certificate and key below
+
+domains:
+  - domain: example.com
+    subdomains:
+      - subdomain: proxied-subdomain1.example.com
+      - subdomain: proxied-subdomain2.example.com
+    certificate:
+      # the certificate and key should be in files directory
+      path: files/example.com.pem
+      key: files/example.com.key
+  - domain: example2.com
+    subdomains:
+      - subdomain: proxied-subdomain1.example2.com
+      - subdomain: proxied-subdomain2.example2.com
+    certificate:
+      # the certificate and key should be in files directory
+      path: files/example2.com.pem
+      key: files/example2.com.key

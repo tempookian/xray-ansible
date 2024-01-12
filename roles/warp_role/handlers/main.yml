@@ -1,0 +1,9 @@
+---
+# handlers file for warp_role
+# restart wg-quick@warp
+- name: restart wg-quick@warp
+  become: true
+  become_user: root
+  systemd:
+    name: wg-quick@warp
+    state: restarted

@@ -1,0 +1,20 @@
+- name: Include uuid_generator_role
+  set_fact:
+    random_uuid: e6cc93b1-1d52-4a85-95c8-dcd9718629dc
+
+- name: Store generated uuid as sni
+  set_fact:
+    sni: "{{ random_uuid }}"
+
+- name: Render template
+  set_fact:
+    rendered_content: "{{ lookup('template', 'templates/client_uri.j2') }}"
+
+- name: Write the rendered to file
+  copy:
+    content: "{{ rendered_content }}"
+    dest: "/tmp/{{ subdomain.subdomain }}.txt"
+
+- name: Generate URI and write to file
+  script: files/uri_create.py "/tmp/{{ subdomain.subdomain }}.txt" "{{ domain.domain }}"
+  register: result

@@ -1,0 +1,6 @@
+- name: Generate random UUID using set_fact and lookup
+  set_fact:
+    random_uuid: '{{ lookup(''pipe'', ''python -c "import uuid; print(uuid.uuid4())"'') }}'
+
+- debug:
+    msg: "The generated UUID is {{ random_uuid }}"

@@ -1,0 +1,6 @@
+---
+# handlers file for xray_role
+- name: Restart xray
+  systemd:
+    name: xray
+    state: restarted

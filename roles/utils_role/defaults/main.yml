@@ -1,0 +1,5 @@
+---
+# defaults file for net-tools_role
+list_of_packages:
+  - net-tools
+  - nload

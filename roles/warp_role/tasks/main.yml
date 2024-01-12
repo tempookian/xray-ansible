@@ -1,0 +1,104 @@
+---
+# tasks file for warp_role
+
+# install wireguard
+- name: Install wireguard and relevant packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - wireguard-tools
+    - wireguard-dkms
+    - resolvconf
+  tags: wireguard
+# download wgcf
+- name: identify the latest version of wgcf
+  shell: |
+    curl -s https://api.github.com/repos/ViRb3/wgcf/releases/latest | grep "tag_name" | awk '{print $2}' | sed 's/[v",]//g'
+  register: result
+  tags: wireguard
+- name: store the latest version of wgcf
+  set_fact:
+    wgcf_version: "{{ result.stdout }}"
+  tags: wireguard
+- name: identify machine architecture
+  shell: |
+    uname -m
+  register: machine_arch
+  tags: wireguard
+- name: generate wgcf friendly arch name
+  set_fact:
+    wgcf_arch: "{{ machine_arch.stdout | regex_replace('x86_64', '386') | regex_replace('aarch64', 'arm64') }}"
+    # TODO: add support for other architectures
+  tags: wireguard
+- name: identify correct file name #wgcf_{version}_linux_{arch}
+  set_fact:
+    wgcf_file_name: "wgcf_{{ wgcf_version }}_linux_{{ wgcf_arch }}"
+  tags: wireguard
+- name: download wgcf
+  become: true
+  get_url:
+    url: "https://github.com/ViRb3/wgcf/releases/download/v{{ wgcf_version }}/wgcf_{{ wgcf_version }}_linux_{{ wgcf_arch }}"
+    dest: "/usr/local/bin/wgcf"
+    mode: 0755
+  tags: wireguard
+- name: make a directory for wgcf generated files # not /etc/wireguard because it's not persistent
+  become: true
+  file:
+    path: /etc/wgcf
+    state: directory
+    mode: 0755
+  tags: wireguard
+- name: check if wgcf account file exists
+  stat:
+    path: /etc/wgcf/wgcf-account.toml
+  register: wgcf_account_file
+  tags: wireguard
+- name: register warp account
+  become: true
+  shell: |
+    /usr/local/bin/wgcf register --accept-tos --config /etc/wgcf/wgcf-account.toml
+  tags: wireguard
+  when: wgcf_account_file.stat.exists == false
+- name: replace license key
+  become: true
+  replace:
+    path: /etc/wgcf/wgcf-account.toml
+    regexp: 'license_key = [''\"].*[''\"]'
+    replace: "license_key = '{{ warp.license_key }}'"
+  tags: wireguard
+  when: warp.license_key is defined
+- name: update warp account
+  become: true
+  shell: |
+    /usr/local/bin/wgcf update --config /etc/wgcf/wgcf-account.toml
+  tags: wireguard
+  when: warp.license_key is defined
+- name: read private key
+  become: true
+  shell: |
+    cat /etc/wgcf/wgcf-account.toml | grep private_key | awk '{print $3}' | sed "s/[\"']//g"
+  tags: wireguard
+  register: private_key
+- name: store private key
+  become: true
+  set_fact:
+    warp: "{{ warp | combine({'private_key': private_key.stdout}) }}"
+  tags: wireguard
+- name: generate warp wireguard profile
+  become: true
+  template:
+    src: templates/warp.conf.j2
+    dest: /etc/wireguard/warp.conf
+    mode: 0644
+    owner: root
+    group: root
+  tags: wireguard
+- name: enable wireguard
+  become: true
+  systemd:
+    name: wg-quick@warp
+    enabled: yes
+    state: started
+  tags: wireguard

@@ -1,0 +1,11 @@
+---
+# defaults file for fail2ban_role
+fail2ban_jail_sshd:
+  enabled: true
+  port: ssh
+  filter: sshd
+  logpath: /var/log/auth.log
+  maxretry: 3
+  bantime: 900
+  findtime: 600
+

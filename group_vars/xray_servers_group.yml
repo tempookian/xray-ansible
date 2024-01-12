@@ -1,0 +1,6 @@
+xray:
+  listen_port: 10801
+  path: /api01 # endpoint path
+  enable_warp: true
+  loglevel: warning
+  config_name: VMESS WS TLS

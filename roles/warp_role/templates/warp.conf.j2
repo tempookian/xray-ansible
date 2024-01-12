@@ -1,0 +1,13 @@
+[Interface]
+PrivateKey = {{ warp.private_key }}
+{% for cidr in warp.addresses | default(addresses) %}
+Address = {{ cidr }}
+{% endfor -%}
+DNS = {{ warp.dns | default(dns) | join(', ') }}
+MTU = {{ warp.mtu | default(mtu) }}
+Table = off
+[Peer]
+PublicKey = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
+AllowedIPs = 0.0.0.0/0
+AllowedIPs = ::/0
+Endpoint = engage.cloudflareclient.com:2408

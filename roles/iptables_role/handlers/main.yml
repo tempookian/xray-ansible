@@ -1,0 +1,7 @@
+---
+# handlers file for iptables_role
+- name: Restart iptables
+  service:
+    name: iptables
+    state: restarted
+  ignore_errors: yes

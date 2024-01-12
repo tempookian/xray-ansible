@@ -1,0 +1,63 @@
+---
+- name: Check if domains is defined
+  hosts: xray_servers_group
+  gather_facts: no
+  tasks:
+    - name: Check if domains is defined
+      fail:
+        msg: "The 'domains' variable is not defined. Define it before running the playbook."
+      when: domains is not defined
+- name: Update and Upgrade APT Packages
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+    - name: Upgrade all APT packages
+      apt:
+        upgrade: dist
+- name: Install Fail2Ban
+  hosts: all
+  become: yes
+  roles:
+    - fail2ban_role
+- name: Install utils
+  hosts: xray_servers_group
+  become: yes
+  roles:
+    - utils_role
+- name: Copy certificates
+  hosts: xray_servers_group
+  become: yes
+  roles:
+    - cert_role
+- name: Setup Nginx
+  hosts: xray_servers_group
+  become: yes
+  roles:
+    - nginx_role
+- name: Install Xray
+  hosts: xray_servers_group
+  become: yes
+  roles:
+    - xray_role
+  tags: xray
+- name: Install Warp
+  hosts: xray_servers_group
+  become: yes
+  roles:
+    - warp_role
+  tags: wireguard
+- name: Configure iptables
+  hosts: xray_servers_group
+  become: yes
+  roles:
+    - iptables_role
+  tags: iptables
+- name: Generate client configs
+  hosts: xray_servers_group
+  roles:
+    - clientconfig_role
+  tags: clientconfig

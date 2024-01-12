@@ -1,0 +1,50 @@
+---
+# tasks file for xray_role
+## Install Xray
+## Download GeoIP database
+## Create config file
+
+- name: Download installation script
+  get_url:
+    url: https://github.com/XTLS/Xray-install/raw/main/install-release.sh
+    dest: /tmp/install-release.sh
+    mode: 0755
+    owner: root
+    group: root
+- name: Check if file is downloaded
+  stat:
+    path: /tmp/install-release.sh
+  register: install_release
+  until: install_release.stat.exists
+  retries: 10
+  delay: 5
+- name: debug msg
+  debug:
+    msg: "File is downloaded"
+- name: Install Xray
+  command: /tmp/install-release.sh install
+  become: true
+  become_user: root
+- name: Download GeoIP database
+  command: /tmp/install-release.sh install-geodata
+  become: true
+  become_user: root
+- name: Include UUID generator
+  include_tasks: "../uuid_generator_role/tasks/uuid_generator.yml"
+- name: Store uuid as xray_uuid
+  set_fact:
+    xray_uuid: "{{ random_uuid }}"
+- name: update xray host var
+  set_fact:
+    xray: "{{ xray | combine({'uuid': xray_uuid}) }}"
+- name: Create config file
+  become: true
+  become_user: root
+  template:
+    src: templates/config.json.j2
+    dest: /usr/local/etc/xray/config.json
+    mode: 0644
+    owner: nobody
+    group: nogroup
+  notify: Restart xray
+  tags: config

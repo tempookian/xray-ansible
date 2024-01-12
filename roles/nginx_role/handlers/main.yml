@@ -1,0 +1,7 @@
+---
+# handlers file for nginx_role
+- name: Restart nginx
+  service:
+    name: nginx
+    state: reload
+  ignore_errors: yes

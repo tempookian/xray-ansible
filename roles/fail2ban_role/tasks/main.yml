@@ -1,0 +1,15 @@
+---
+# tasks file for fail2ban_role
+- name: Install Fail2Ban
+  apt:
+    name: fail2ban
+    state: latest
+    update_cache: yes
+- name: Copy Fail2Ban config
+  template:
+    src: fail2ban.j2
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban

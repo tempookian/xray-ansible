@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  remote_user: smz
+  roles:
+    - xray_role

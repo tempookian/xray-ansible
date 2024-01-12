@@ -1,0 +1,19 @@
+- name: Generate and store configs
+  include_tasks: domain_task.yml
+  loop: "{{ domains }}"
+  loop_control:
+    loop_var: domain
+- name: Slurp the generated configs
+  slurp:
+    src: "/tmp/{{ domain.domain }}_client_configs.txt"
+  loop: "{{ domains }}"
+  loop_control:
+    loop_var: domain
+  register: slurp_result
+- name: Display the slurped configs
+  debug:
+    msg: "{{ item.content | b64decode | to_nice_json }}"
+    verbosity: 0
+  loop: "{{ slurp_result.results }}"
+  loop_control:
+    loop_var: item

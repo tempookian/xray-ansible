@@ -1,0 +1,13 @@
+domains:
+  # the domains are used only for server access; the specific domain used is not crucial
+  # the dns records for the domains must be proxied
+  - domain: example.com
+    subdomains:
+      - subdomain: subdomain1.example.com
+      - subdomain: subdomain2.example.com
+    certificate:
+      # the certificate and key should be in the files directory
+      path: files/example_com_certificate.pem
+      key: files/example_com_private.key
+warp:
+  license_key: "example_license_key" # if not provided, the script will generate a new one (free plan)
