@@ -4,7 +4,6 @@ domains:
   - domain: example.com
     subdomains:
       - subdomain: subdomain1.example.com
-      - subdomain: subdomain2.example.com
     certificate:
       # the certificate and key should be in the files directory
       path: files/example_com_certificate.pem
