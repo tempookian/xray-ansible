@@ -78,7 +78,7 @@ To provision an Xray server:
 
 ## Author
 
-- [Your GitHub Handle](https://github.com/tempookian)
+- [@tempookian](https://github.com/tempookian)
 
 ## License
 
