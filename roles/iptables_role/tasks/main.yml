@@ -12,4 +12,8 @@
     dest: /etc/iptables/rules.v4
   notify:
     - Restart iptables
-    - Restart fail2ban
+- name: Restart fail2ban
+  service:
+    name: fail2ban
+    state: restarted
+  ignore_errors: yes

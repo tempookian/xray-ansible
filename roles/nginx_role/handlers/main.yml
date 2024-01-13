@@ -3,5 +3,5 @@
 - name: Restart nginx
   service:
     name: nginx
-    state: reload
+    state: reloaded
   ignore_errors: yes

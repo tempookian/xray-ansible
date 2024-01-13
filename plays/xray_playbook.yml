@@ -61,3 +61,27 @@
   roles:
     - clientconfig_role
   tags: clientconfig
+- name: Restart services
+  hosts: xray_servers_group
+  become: yes
+  tasks:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+    - name: Restart Xray
+      service:
+        name: xray
+        state: restarted
+    - name: Restart Warp
+      service:
+        name: wg-quick@warp
+        state: restarted
+    - name: Restart iptables
+      service:
+        name: iptables
+        state: restarted
+    - name: Restart fail2ban
+      service:
+        name: fail2ban
+        state: restarted
