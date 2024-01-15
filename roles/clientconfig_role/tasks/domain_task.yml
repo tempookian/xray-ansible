@@ -1,5 +1,13 @@
 # check if /tmp/{{ domain.domain }}_client_configs.txt exists
 # if it does, skip
+- name: Create a new empty file
+  copy:
+    dest: /tmp/{{ domain.domain }}_client_configs.txt
+    content: ""
+    force: yes
+  when: config_file_changed is defined and config_file_changed == true
+
+  when: config_file_changed is defined and config_file_changed == true
 - name: Generate and store configs - {{ domain.domain }}
   include_tasks: subdomain_task.yml
   loop: "{{ domain.subdomains }}"
