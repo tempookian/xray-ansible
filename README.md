@@ -18,6 +18,12 @@ git clone https://github.com/tempookian/xray-ansible
 
 ## Preparations
 
+<a name="prep_cf_dns"></a>
+### DNS Records
+
+- Create a subdomain (e.g., sub.example.com) which resolves to your server's IP address
+  - **IMPORTANT**: this subdomain should be defined as a proxied record
+
 <a name="prep_cf_certs"></a>
 ### Cloudflare Origin CA certificates
 
