@@ -1,6 +1,6 @@
 all:
   children:
-    server_group_example:
+    xray_servers_group:
       hosts:
         IP.IP.IP.IP:
           ansible_port: 22
