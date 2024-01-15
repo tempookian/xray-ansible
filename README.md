@@ -73,7 +73,7 @@ To provision an Xray server:
      - If you don't have a Warp+ account, delete license_key from the file
 8. Run the Ansible playbook:
    ```
-   ansible-playbook -i inventory.yml xray.yml
+   ansible-playbook -i inventory.yml plays/xray_playbook.yml
    ```
 
 ## Author
