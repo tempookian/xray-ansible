@@ -50,6 +50,7 @@
   roles:
     - warp_role
   tags: wireguard
+  when: warp is defined and warp == true
 - name: Configure iptables
   hosts: xray_servers_group
   become: yes
@@ -77,6 +78,7 @@
       service:
         name: wg-quick@warp
         state: restarted
+      when: warp is defined and warp == true
     - name: Restart fail2ban
       service:
         name: fail2ban
